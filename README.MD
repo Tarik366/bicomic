@@ -6,6 +6,8 @@
 
 BiComic is a file format for multi-lingual manga(or comic)
 
+## Structure
+
 ``` mermaid 
 ---
 config:
@@ -30,3 +32,35 @@ flowchart TB
     n3@{ shape: procs}
     n5@{ shape: extract}
 ```
+
+## Naming Syntax
+
+### General
+
+- File names must be always camel-case.
+
+### Episodes
+
+- You can name episodes after hypens
+- You can use dots in episode numbers but not in episode names.
+
+### Pages
+
+- Pages must be start with numbers. Numbers should have leading zero('s) for better sorting in some circumstances.
+- Hypens in pages are ignored by extractor so you can use for commenting or something else
+- Use of Dot(period) and comma is prohibited and must be not using in especially in page numbers before hypens.
+
+### Typesets
+
+## Format support
+
+Format support for pageset is like this. You can use any of the marked ones 
+
+- [ ] PSD support
+- [ ] PNG support
+- [ ] JPG support
+- [ ] WEBP support
+- [ ] AVIF support
+- [ ] HEIF support
+- [ ] GIF support
+- [ ] SVG support
