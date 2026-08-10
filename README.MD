@@ -52,6 +52,8 @@ flowchart TB
 
 ### Typesets
 
+Typesets are made of two part: Header that initialize necessary things like fonts; and sets that stores typesetting data.
+
 ## Format support
 
 Format support for pageset is like this. You can use any of the marked ones 
