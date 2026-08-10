@@ -1,13 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/product.schema.json",
-  "title": "Product",
-  "description": "A product from Acme's catalog",
+  "$id": "https://raw.githubusercontent.com/Tarik366/bicomic/refs/heads/master/schema.json",
+  "title": "Bicomic Metadata",
+  "description": "A metadata file from multi-lingual bicomic archive",
   "type": "object",
   "properties": {
-    "productId": {
-      "description": "The unique identifier for a product",
-      "type": "integer"
+    "titles": {
+      "description": "Titles of books. like `"eng": "A Witch's Life in Mongol"`",
+      "type": "object",
+      }
     }
   }
 }
