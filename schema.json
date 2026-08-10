@@ -6,7 +6,7 @@
   "type": "object",
   "properties": {
     "titles": {
-      "description": "Titles of books. like `"eng": "A Witch's Life in Mongol"`",
+      "description": "Titles of books. like `'eng': 'A Witch's Life in Mongol'`",
       "type": "object",
       }
     }
