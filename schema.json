@@ -8,7 +8,14 @@
     "titles": {
       "description": "Titles of books. like `'eng': 'A Witch's Life in Mongol'`",
       "type": "object",
+      },
+    "supportedLanguages": {
+      "description": "List of files supported languages",
+      "type": "array",
+      "items": {
+        "type": "string"
       }
+    },
     }
   }
 }
