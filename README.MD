@@ -38,6 +38,7 @@ flowchart TB
 ### General
 
 - File names must be always camel-case.
+- All languages must be flaged in ISO 639-3 standart. 
 
 ### Episodes
 
