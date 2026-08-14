@@ -38,6 +38,7 @@ flowchart TB
 ### General
 
 - File names must be always camel-case.
+- Files mustn't use any tab characters, only use spaces
 - All languages must be flaged in ISO 639-3 standart. 
 
 ### Episodes
@@ -67,3 +68,10 @@ Format support for pageset is like this. You can use any of the marked ones
 - [ ] HEIF support
 - [ ] GIF support
 - [ ] SVG support
+
+## Terminology
+
+- `Comic`: An conclutive term for any image book but can be used as any non-CJK comics
+- `Manga`: Mostly exclusive to the Japan Comics
+- `Manhua`: Chinese Comics
+- `Hawha`: Korean Comics
