@@ -3,10 +3,16 @@
 
 #include "bicomic.h"
 
+#include <interpretter.h>
+#include <fileManager.h>
+
 using namespace std;
 
 int main()
 {
-	cout << "Hello CMake." << endl;
-	return 0;
+    string exampleText = readTextFile("example.bcs");
+    auto cascadian = removeComments(exampleText);
+
+    cout << cascadian << endl;
+    return 0;
 }
