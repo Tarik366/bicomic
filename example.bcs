@@ -4,22 +4,24 @@
         // This is an example for a Japanese Manga
         paging: rtl;
         line-direction: rtl;
-        wording-direction top bottom;
+        wording-direction ttb;
     </order>
     <styles>
-        .alya {
+        alya {
             prefix: ".";
             font: "wildwords roman", "Display"; // You can use fallback fonts like in the css
-            font-size: 18pt; // you can use ... like px, pt or %
+            font-size: 18pt; // you can use px or pt
+			color: rgba(0, 0, 0, 0.8);
             spacing: center; // TODO: Must be changed with real css implementation
-            outline: 3px white; // NOTE: Maybe we can add outline styles like in the photoshop
+            outline-size: 3; // Only in pixels
+			outline-color: white; // NOTE: Maybe we can add outline styles like in the photoshop
         }
-        .p {
+        p {
             prefix: "⁋";
             spacing: left;
         }
     </styles>
 </header>
 <body>
-.Aptal Kuze. <text-size="12pt">sukida</>
+.Aptal Kuze. {\fs12}sukida{\fs}
 </body>

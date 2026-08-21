@@ -33,6 +33,13 @@ flowchart TB
     n5@{ shape: extract}
 ```
 
+### Fonts
+
+All fonts(even the system fonts) must be initialized with direct url to ttf file by the metadata.json. 
+Application search fonts in the system first but it can't find the required fonts because most of the comic fonts are super rare. 
+But if you wanna put the font file in the archive. 
+Yeah you can do that too. Application compresses the font to remove unnecessary glypes to save some storage but remember this ttf files cannot used accross several archives.
+
 ## Naming Syntax
 
 ### General
