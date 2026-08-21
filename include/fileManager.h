@@ -1,24 +1,21 @@
 #pragma once
 
 #include <string>
+#include <fstream>
+#include <sstream>
 
 std::string readTextFile(std::string filename) {
-	std::string filecont;
+    std::ifstream file("example.bcs");
 
-	std::fstream fs;
-	fs.open(filename);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open the file.\n";
+        return "";
+    }
 
-	if (!fs.is_open()) {
-		fs.clear();
-		if (std::ifstream is{ filename, std::ios::binary | std::ios::ate }) {
-			auto size = is.tellg();
-			std::string str(size, '\0'); // construct string to stream size
-			is.seekg(0);
-			if (is.read(&str[0], size)) {
-				filecont = str;
-			}
-		}
-		fs.close();
-		return filecont;
-	}
+    std::stringstream buffer;
+    buffer << file.rdbuf();       // Read the entire file buffer into the stream
+	return buffer.str();
+
 }
+
+// TODO: An appropriate file manager?
