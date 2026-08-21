@@ -14,12 +14,19 @@ config:
   theme: redux-dark
 ---
 flowchart TB
- subgraph s1["BCM archive"]
-        n2["pageset"]
-        n3["typeset"]
-        n4["metadata.json"]
+  subgraph s99["Episode"]
+    n2["pageset"]
+    subgraph s98["Language folders i.e 'spa'"]
+      n3["typeset"]
+      n81[page override]
+    end
   end
- subgraph s2["Typesetter"]
+ subgraph s1["BCM archive"]
+    s99
+
+    n4["metadata.json"]
+  end
+  subgraph s2["Typesetter"]
         n7["Parse typeset"]
         n8["place texts to pages"]
   end
@@ -47,7 +54,7 @@ Yeah you can do that too. Application compresses the font to remove unnecessary 
 - File names must be always camel-case.
 - Files mustn't use any tab characters, only use spaces
 - All languages must be flaged in ISO 639-3 standart. 
-- Typos? I'm not a llm and i'm using a keybýard that i'm not famiþiar, of course I'm gona make so many typos unconciusly. Okay this line is a bit exaggeration that if i don't retype my errors but it still valid
+- Typos? I'm not a llm and i'm using a keybÄ±ard that i'm not famiÅŸiar, of course I'm gona make so many typos unconciusly. Okay this line is a bit exaggeration that if i don't retype my errors but it still valid
 
 ### Episodes
 
