@@ -40,13 +40,14 @@ Application search fonts in the system first but it can't find the required font
 But if you wanna put the font file in the archive. 
 Yeah you can do that too. Application compresses the font to remove unnecessary glypes to save some storage but remember this ttf files cannot used accross several archives.
 
-## Naming Syntax
+## Syntax
 
 ### General
 
 - File names must be always camel-case.
 - Files mustn't use any tab characters, only use spaces
 - All languages must be flaged in ISO 639-3 standart. 
+- Typos? I'm not a llm and i'm using a keybýard that i'm not famiþiar, of course I'm gona make so many typos unconciusly. Okay this line is a bit exaggeration that if i don't retype my errors but it still valid
 
 ### Episodes
 
