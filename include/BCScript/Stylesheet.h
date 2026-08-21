@@ -5,13 +5,12 @@
 #include <regex>
 #include <string_view>
 #include <ranges>
-#include <list>
 #include <cmath>
 #include <iomanip>
 
 #include <Magick++.h>
 
-#include <styleConstants.h>
+#include "styleConstants.h"
 #include <stringOperations.h>
 
 // Turn any "18pt", "10%" like dimensions to pixels to be can processed by imageMagick

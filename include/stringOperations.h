@@ -19,6 +19,14 @@ std::string trim(const std::string& str) {
     return str.substr(strBegin, strRange);
 }
 
+std::string removeComments(std::string styleText) {
+    // find all comment delimeters and pop until new-line character
+    std::string result;
+    std::regex comment("//.*\n");
+
+    return trim(std::regex_replace(styleText, comment, ""));
+}
+
 std::map<std::string, std::string> readCascading(std::string styleText) {
     std::map<std::string, std::string> result;
     std::regex pattern("([\\w|-]+):(?:\\s+)(\\w+);");
