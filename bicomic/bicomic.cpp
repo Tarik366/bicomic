@@ -5,6 +5,10 @@
 
 #include <interpretter.h>
 #include <fileManager.h>
+#include <episode.h>
+#include <ImageProcessor/ImageProcessor.h>
+
+#include <ReaderPSD/ReaderPsd.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -12,7 +16,7 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char** argv)
 {
 #if _WIN32
     SetConsoleOutputCP(CP_UTF8);
@@ -22,6 +26,8 @@ int main()
     auto cascadian = removeComments(exampleText);
 
     auto parsed = parseBody(cascadian);
+
+   
 
     cout << parsed << endl;
     return 0;

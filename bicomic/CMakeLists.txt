@@ -10,3 +10,4 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 # TODO: Gerekirse testleri ve yükleme hedeflerini ekleyin.
+target_link_libraries(bicomic PRIVATE Psd)

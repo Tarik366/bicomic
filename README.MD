@@ -1,5 +1,5 @@
-# BiComic
 
+# BiComic
 - Structure
 - Naming syntax
 - typesetting syntax
@@ -23,7 +23,7 @@ flowchart TB
   end
  subgraph s1["BCM archive"]
     s99
-
+    n9["External Fonts"]
     n4["metadata.json"]
   end
   subgraph s2["Typesetter"]
@@ -37,8 +37,11 @@ flowchart TB
 
     n2@{ shape: procs}
     n3@{ shape: procs}
+    n9@{ shape: procs}
     n5@{ shape: extract}
 ```
+
+### 
 
 ### Fonts
 

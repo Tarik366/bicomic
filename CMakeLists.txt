@@ -14,11 +14,17 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
+cmake_policy(SET CMP0079 NEW)
+
 find_package(ImageMagick REQUIRED COMPONENTS Magick++)
 
 # Alt projeleri ekleyin.
-include_directories ("include")
-add_subdirectory ("bicomic")
+include_directories("include")
+add_subdirectory(external/psd_sdk/src/Psd Psd)
+add_subdirectory("bicomic")
 
-cmake_policy(SET CMP0079 NEW)
+target_include_directories(bicomic PRIVATE ${ImageMagick_INCLUDE_DIRS})
 target_link_libraries(bicomic PRIVATE ImageMagick::Magick++)
+
+target_include_directories(bicomic PRIVATE external/psd_sdk/src)
+target_link_libraries(bicomic PRIVATE Psd)
