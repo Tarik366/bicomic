@@ -21,7 +21,7 @@ int Test(int argc, char** argv) {
 		img.fontPointsize(26);
 		img.fillColor("black");
 
-		img.annotate("Hello World from C++", Magick::Geometry(200, 50, 1410, 300), Magick::CenterGravity);
+		img.annotate("—Çünkü", Magick::Geometry(188, 55, 1326, 369), Magick::CenterGravity);
 
 		img.write("annotated_output.png");
 

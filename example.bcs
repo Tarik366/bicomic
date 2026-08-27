@@ -1,27 +1,20 @@
 ﻿<header>
     <title description="Title of the episode in the specific language">25. Bölüm: Kurtuluş</title>
-    <order>
-        // This is an example for a Japanese Manga
-        paging: rtl;
-        line-direction: rtl;
-        wording-direction ttb;
-    </order>
     <styles>
         alya {
-            prefix: ".";
             font: "wildwords roman", "Display"; // You can use fallback fonts like in the css
             font-size: 18pt; // you can use px or pt
-			color: rgba(0, 0, 0, 0.8);
+			fillColor: rgba(0, 0, 0, 0.8);
+            strokeColor: rgb(1, 1, 1)
             spacing: center; // TODO: Must be changed with real css implementation
             outline-size: 3; // Only in pixels
 			outline-color: white; // NOTE: Maybe we can add outline styles like in the photoshop
         }
         p {
-            prefix: "⁋";
             spacing: left;
         }
     </styles>
 </header>
 <body>
-[1357;230;alya;26;white;78]Aptal Kuze. {\fs12}sukida{\fs}
+[1357;230;240;80;alya;26;white;78;]Aptal Kuze. {\fs12}sukida{\fs}
 </body>

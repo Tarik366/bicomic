@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 
     auto parsed = parseBody(cascadian);
 
-   
+    Test(argc, argv);
 
     cout << parsed << endl;
     return 0;
