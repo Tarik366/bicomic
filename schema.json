@@ -6,8 +6,9 @@
   "type": "object",
   "properties": {
     "titles": {
+      "$schema": "https://raw.githubusercontent.com/Tarik366/bicomic/refs/heads/master/languageObject.json",
       "description": "Titles of books. like `'eng': 'A Witch's Life in Mongol'`",
-      "type": "object",
+      "type": "object"
       },
     "supportedLanguages": {
       "description": "List of files supported languages",
@@ -16,6 +17,14 @@
         "type": "string"
       }
     },
+    "metadata": {
+      "type": "array",
+      "properties": {
+        "iframe": {
+          "type": "string",
+          "description": "Html string of iframe should seen in after the episode"
+        }
+      }
     }
   }
 }
