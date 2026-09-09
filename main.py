@@ -29,6 +29,34 @@ class EncodeStudent(JSONEncoder):
     def default(self, o):
         return o.__dict__
 
+def Descriptor_to_dickt(val):
+    if isinstance(val, psd_tools.psd.descriptor.Bool):
+        return bool(val.value)
+
+    elif isinstance(val, psd_tools.psd.descriptor.Enumerated):
+        return val.get_name()
+
+    elif isinstance(val, psd_tools.psd.descriptor.UnitFloat):
+        return {"value": val.value, "unit": val.unit.value.decode()}
+
+    elif isinstance(val, psd_tools.psd.descriptor.Double):
+        return val.value
+
+    elif isinstance(val, psd_tools.psd.descriptor.Descriptor):
+        clr = {}
+        for chan, col in val.items():
+            clr[chan.decode()] = Descriptor_to_dickt(col)
+        return clr
+
+    elif isinstance(val, psd_tools.psd.descriptor.List):
+        li = [] 
+        for it in val._items:
+            li.append(Descriptor_to_dickt(it))
+        return li
+
+    else:
+        return val
+
 with open("export.bcs","w") as BCScript:
 
     # list of fonts in the psd file for font gathering process
@@ -40,31 +68,12 @@ with open("export.bcs","w") as BCScript:
             BCScript.write(f"{layer.text};\n")
 
             print(layer.effects.items)
+            effect_list = []
             for effect in layer.effects.items:
                 copy_of_descriptor = {}
                 for key, val in effect.__dict__["descriptor"].items():
-
-                    if isinstance(val, psd_tools.psd.descriptor.Bool):
-                        copy_of_descriptor[key.decode("utf-8")] = bool(val.value)
-
-                    elif isinstance(val, psd_tools.psd.descriptor.Enumerated):
-                        copy_of_descriptor[key.decode("utf-8")] = val.get_name()
-                        
-                    elif isinstance(val, psd_tools.psd.descriptor.UnitFloat):
-                        copy_of_descriptor[key.decode("utf-8")] = val.value
-                        copy_of_descriptor[f"{key.decode("utf-8")}_unit"] = val.unit.value.decode()
-
-                    elif isinstance(val, psd_tools.psd.descriptor.Descriptor):
-                        clr = {}
-                        for chan, col in val.items():
-                            clr[chan.decode()] = col.value
-                        copy_of_descriptor[key.decode("utf-8")] = clr
-                        
-                    else:
-                        copy_of_descriptor[key.decode("utf-8")] = val
-                        
-                print(json.dumps(copy_of_descriptor))
-                json.dump(copy_of_descriptor, BCScript)
+                    copy_of_descriptor[key.decode()] = Descriptor_to_dickt(val)
+                effect_list.append(copy_of_descriptor)
 
             text = layer.engine_dict['Editor']['Text'].value
 
