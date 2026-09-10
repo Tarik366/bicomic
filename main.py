@@ -9,25 +9,19 @@ psd.composite().save('example.png')
 
 class Line:
     BoundingBox: tuple
+    text: str
+
     style: str
     fontSize: int
     fillColor: tuple
-    strokeColor: tuple
-    strokeSize: int
     justification: constants.Justification
+    effects: list[dict]
+
 
 
 class BCScript:
     styles: dict[dict]
-    lines: Line
-
-"""class BEffect(_Effect):
-    def to_json(self):
-        """
-
-class EncodeStudent(JSONEncoder):
-    def default(self, o):
-        return o.__dict__
+    lines: list[Line]
 
 def Descriptor_to_dickt(val):
     if isinstance(val, psd_tools.psd.descriptor.Bool):
@@ -57,31 +51,55 @@ def Descriptor_to_dickt(val):
     else:
         return val
 
-with open("export.bcs","w") as BCScript:
+with open("export.bcs","w") as BCScriptFile:
 
     # list of fonts in the psd file for font gathering process
+    bscript = BCScript()
     fontset = []
 
     for layer in psd:
         if layer.kind == "type":
-            BCScript.write(f"{layer.size}, {layer.offset};\n")
-            BCScript.write(f"{layer.text};\n")
+            line = Line()
 
-            print(layer.effects.items)
+            line.BoundingBox = layer.size + layer.offset
+            line.text = layer.text
+
             effect_list = []
             for effect in layer.effects.items:
                 copy_of_descriptor = {}
                 for key, val in effect.__dict__["descriptor"].items():
                     copy_of_descriptor[key.decode()] = Descriptor_to_dickt(val)
                 effect_list.append(copy_of_descriptor)
+            line.effects = effect_list
 
             text = layer.engine_dict['Editor']['Text'].value
+            print(layer.text)
+
+            font_name_buff = []
+            font_size_buff = []
+            fill_color_buff = []
+
+            text_buff = ""
 
             ts = layer.typesetting
             for paragraph in ts:
-                stylesUsing = {}
-                BCScript.write(constants.Justification(paragraph.style.justification).name)
+
+                line = constants.Justification(paragraph.style.justification)
                 for run in paragraph.runs:
-                    BCScript.write(f"\n{run.text};{run.style.font_name};{round(run.style.font_size * 1.3333)};{run.style.fill_color};{run.style.stroke_color}\n\n")
+
+                    if run.style.font_name != font_name_buff[-1:]:
+                        text_buff += f"{{}}{run.style.font_name}"
+                        font_name_buff.append(run.style.font_name)
+                    if run.style.font_size != font_size_buff[-1:]:
+                        print(f"yeni font boyutu: {run.style.font_size}")
+                        font_size_buff.append(run.style.font_size)
+                    if run.style.fill_color != fill_color_buff[-1:]:
+                        print(f"yeni font rengi: {run.style.fill_color}")
+
+                        fill_color_buff.append(run.style.fill_color)
+
+                    print(font_name_buff)
+
+                    print(f"{run.text};{run.style.font_name};{round(run.style.font_size * 1.3333)};{run.style.fill_color};\n")
 
                     # TODO: Convert text layers into bcscript file
