@@ -4,52 +4,49 @@ import psd_tools.psd.descriptor
 import json
 from json import JSONEncoder
 
+from bcs_tokenizer import Token, Line, Alignment
+
 psd = PSDImage.open('unicorn-controller.psd')
 psd.composite().save('example.png')
-
-class Line:
-    BoundingBox: tuple
-    text: str
-
-    style: str
-    fontSize: int
-    fillColor: tuple
-    justification: constants.Justification
-    effects: list[dict]
-
-
 
 class BCScript:
     styles: dict[dict]
     lines: list[Line]
 
 def Descriptor_to_dickt(val):
-    if isinstance(val, psd_tools.psd.descriptor.Bool):
-        return bool(val.value)
+    match type(val):
+        case psd_tools.psd.descriptor.Bool:
+            return bool(val.value)
 
-    elif isinstance(val, psd_tools.psd.descriptor.Enumerated):
-        return val.get_name()
+        case psd_tools.psd.descriptor.Enumerated:
+            return val.get_name()
 
-    elif isinstance(val, psd_tools.psd.descriptor.UnitFloat):
-        return {"value": val.value, "unit": val.unit.value.decode()}
+        case psd_tools.psd.descriptor.UnitFloat:
+            return {"value": val.value, "unit": val.unit.value.decode()}
 
-    elif isinstance(val, psd_tools.psd.descriptor.Double):
-        return val.value
+        case psd_tools.psd.descriptor.Double:
+            return val.value
 
-    elif isinstance(val, psd_tools.psd.descriptor.Descriptor):
-        clr = {}
-        for chan, col in val.items():
-            clr[chan.decode()] = Descriptor_to_dickt(col)
-        return clr
+        case psd_tools.psd.descriptor.Descriptor:
+            clr = {}
+            for chan, col in val.items():
+                clr[chan.decode()] = Descriptor_to_dickt(col)
+            return clr
 
-    elif isinstance(val, psd_tools.psd.descriptor.List):
-        li = [] 
-        for it in val._items:
-            li.append(Descriptor_to_dickt(it))
-        return li
+        case psd_tools.psd.descriptor.List:
+            li = [] 
+            for it in val._items:
+                li.append(Descriptor_to_dickt(it))
+            return li
 
-    else:
-        return val
+        case _:
+            return val
+
+def lerp(v0, v1, t):
+    return (1 - t) * v0 + t * v1
+
+def c8(run):
+    return f"{int(lerp(0, 255, run)):02x}"
 
 with open("export.bcs","w") as BCScriptFile:
 
@@ -58,11 +55,12 @@ with open("export.bcs","w") as BCScriptFile:
     fontset = []
 
     for layer in psd:
+
         if layer.kind == "type":
             line = Line()
 
-            line.BoundingBox = layer.size + layer.offset
-            line.text = layer.text
+            line.Position = Token("\\pos", f"{layer.offset[0]}")
+            line.BoundingBox = Token("\\bbox", layer.size)
 
             effect_list = []
             for effect in layer.effects.items:
@@ -79,27 +77,66 @@ with open("export.bcs","w") as BCScriptFile:
             font_size_buff = []
             fill_color_buff = []
 
-            text_buff = ""
+            text_buff = []
 
             ts = layer.typesetting
             for paragraph in ts:
 
-                line = constants.Justification(paragraph.style.justification)
+                line.justification = Alignment(paragraph.style.justification)
                 for run in paragraph.runs:
 
-                    if run.style.font_name != font_name_buff[-1:]:
-                        text_buff += f"{{}}{run.style.font_name}"
-                        font_name_buff.append(run.style.font_name)
-                    if run.style.font_size != font_size_buff[-1:]:
-                        print(f"yeni font boyutu: {run.style.font_size}")
-                        font_size_buff.append(run.style.font_size)
-                    if run.style.fill_color != fill_color_buff[-1:]:
-                        print(f"yeni font rengi: {run.style.fill_color}")
+                    tag_buffer: list[Token] = []
 
+                    try:
+                        if run.style.font_name != font_name_buff[-1]:
+                            tag_buffer.append(Token("\\fn", run.style.font_name))
+                            font_name_buff.append(run.style.font_name)
+                    except IndexError:
+                        tag_buffer.append(Token("\\fn", run.style.font_name))
+                        font_name_buff.append(run.style.font_name)
+
+                    try:
+                        if run.style.font_size != font_size_buff[-1]:
+                            tag_buffer.append(Token("\\fs", round(run.style.font_size * 1.3333)))
+                            font_size_buff.append(run.style.font_size)
+                    except IndexError:
+                        tag_buffer.append(Token("\\fs", round(run.style.font_size * 1.3333)))
+                        font_size_buff.append(run.style.font_size)
+
+                    try:
+                        # TODO: Add alpha channel and don't forget to layer opacity
+                        if run.style.fill_color != fill_color_buff[-1]:
+                            tag_buffer.append(Token("\\c&H", f"{c8(run.style.fill_color[1])}{c8(run.style.fill_color[2])}{c8(run.style.fill_color[3])}&"))
+                            fill_color_buff.append(run.style.fill_color)
+                    except IndexError:
+                        tag_buffer.append(Token("\\c&H", f"{c8(run.style.fill_color[1])}{c8(run.style.fill_color[2])}{c8(run.style.fill_color[3])}&"))
                         fill_color_buff.append(run.style.fill_color)
 
-                    print(font_name_buff)
+                    single_tag = ""
 
-                    print(f"{run.text};{run.style.font_name};{round(run.style.font_size * 1.3333)};{run.style.fill_color};\n")
+                    if tag_buffer:
+                        single_tag += "{"
 
+                        for tag in tag_buffer:
+                            single_tag += f"{tag.tag}:{tag.value}"
+
+                        single_tag += "}"
+
+                    single_tag += run.text
+
+                    if tag_buffer:
+                        single_tag += "{"
+
+                        for tag in tag_buffer:
+                            single_tag += f"{tag.tag}"
+
+                        single_tag += "}"
+                    
+
+                    print("single_tag:", single_tag)
+
+                    line.text = single_tag
+                    print("result:", line)
                     # TODO: Convert text layers into bcscript file
+
+            BCScriptFile.write("\n")
