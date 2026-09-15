@@ -74,7 +74,6 @@ class Alignment(Enum):
             case 6:
                 return 1
             
-
 class Line:
     Position: Token
     BoundingBox: Token
@@ -85,3 +84,7 @@ class Line:
 
     def __str__(self):
         return f"{{{self.Position}{self.BoundingBox}}}{self.text}"
+
+class BCScript:
+    styles: dict[dict]
+    lines: list[Line]

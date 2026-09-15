@@ -1,46 +1,13 @@
 from psd_tools import PSDImage, constants, color_convert, api
 from psd_tools.api.effects import _Effect
 import psd_tools.psd.descriptor
-import json
-from json import JSONEncoder
 
-from bcs_tokenizer import Token, Line, Alignment
+from bcs_tokenizer import *
+from interpretter import *
 
 psd = PSDImage.open('unicorn-controller.psd')
 psd.composite().save('example.png')
 
-class BCScript:
-    styles: dict[dict]
-    lines: list[Line]
-
-def Descriptor_to_dickt(val):
-    match type(val):
-        case psd_tools.psd.descriptor.Bool:
-            return bool(val.value)
-
-        case psd_tools.psd.descriptor.Enumerated:
-            return val.get_name()
-
-        case psd_tools.psd.descriptor.UnitFloat:
-            return {"value": val.value, "unit": val.unit.value.decode()}
-
-        case psd_tools.psd.descriptor.Double:
-            return val.value
-
-        case psd_tools.psd.descriptor.Descriptor:
-            clr = {}
-            for chan, col in val.items():
-                clr[chan.decode()] = Descriptor_to_dickt(col)
-            return clr
-
-        case psd_tools.psd.descriptor.List:
-            li = [] 
-            for it in val._items:
-                li.append(Descriptor_to_dickt(it))
-            return li
-
-        case _:
-            return val
 
 def lerp(v0, v1, t):
     return (1 - t) * v0 + t * v1
@@ -50,8 +17,8 @@ def c8(run):
 
 with open("export.bcs","w") as BCScriptFile:
 
-    # list of fonts in the psd file for font gathering process
     bscript = BCScript()
+    # list of fonts in the psd file for font gathering process
     fontset = []
 
     for layer in psd:
@@ -62,13 +29,7 @@ with open("export.bcs","w") as BCScriptFile:
             line.Position = Token("\\pos", f"{layer.offset[0]}")
             line.BoundingBox = Token("\\bbox", layer.size)
 
-            effect_list = []
-            for effect in layer.effects.items:
-                copy_of_descriptor = {}
-                for key, val in effect.__dict__["descriptor"].items():
-                    copy_of_descriptor[key.decode()] = Descriptor_to_dickt(val)
-                effect_list.append(copy_of_descriptor)
-            line.effects = effect_list
+            effect_list = effect_handler(layer.effects.items)
 
             text = layer.engine_dict['Editor']['Text'].value
             print(layer.text)
@@ -116,24 +77,18 @@ with open("export.bcs","w") as BCScriptFile:
 
                     if tag_buffer:
                         single_tag += "{"
-
                         for tag in tag_buffer:
                             single_tag += f"{tag.tag}:{tag.value}"
-
                         single_tag += "}"
 
                     single_tag += run.text
 
                     if tag_buffer:
                         single_tag += "{"
-
                         for tag in tag_buffer:
+
                             single_tag += f"{tag.tag}"
-
                         single_tag += "}"
-                    
-
-                    print("single_tag:", single_tag)
 
                     line.text = single_tag
                     print("result:", line)
