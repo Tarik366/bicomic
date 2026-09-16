@@ -4,16 +4,10 @@ import psd_tools.psd.descriptor
 
 from bcs_tokenizer import *
 from interpretter import *
+from meth import *
 
 psd = PSDImage.open('unicorn-controller.psd')
 psd.composite().save('example.png')
-
-
-def lerp(v0, v1, t):
-    return (1 - t) * v0 + t * v1
-
-def c8(run):
-    return f"{int(lerp(0, 255, run)):02x}"
 
 with open("export.bcs","w") as BCScriptFile:
 
@@ -26,13 +20,21 @@ with open("export.bcs","w") as BCScriptFile:
         if layer.kind == "type":
             line = Line()
 
-            line.Position = Token("\\pos", f"{layer.offset[0]}")
+            line.Position = Token("\\pos", f"{layer.offset}")
             line.BoundingBox = Token("\\bbox", layer.size)
+
+            line.Opacity = Token("\\1a&H", layer.fill_opacity)
+
+            tm = decompose_transform_matrix_for_ass_format(layer.transform)
+
+            line.Rotation = Token("\\frz", tm["rotation_deg"])
+            line.Shear = Token("\\fax", tm["shear_factor"])
+            line.FontScaleX = Token("\\fscx", tm["scale_x"])
+            line.FontScaleY = Token("\\fscy", tm["scale_y"])
 
             effect_list = effect_handler(layer.effects.items)
 
             text = layer.engine_dict['Editor']['Text'].value
-            print(layer.text)
 
             font_name_buff = []
             font_size_buff = []
@@ -43,11 +45,12 @@ with open("export.bcs","w") as BCScriptFile:
             ts = layer.typesetting
             for paragraph in ts:
 
-                line.justification = Alignment(paragraph.style.justification)
+                line.justification = Alignment.from_just(paragraph.style.justification)
                 for run in paragraph.runs:
 
                     tag_buffer: list[Token] = []
 
+                    # Check font name to add tag_buffer
                     try:
                         if run.style.font_name != font_name_buff[-1]:
                             tag_buffer.append(Token("\\fn", run.style.font_name))
@@ -56,6 +59,7 @@ with open("export.bcs","w") as BCScriptFile:
                         tag_buffer.append(Token("\\fn", run.style.font_name))
                         font_name_buff.append(run.style.font_name)
 
+                    # Check font size to add tag_buffer
                     try:
                         if run.style.font_size != font_size_buff[-1]:
                             tag_buffer.append(Token("\\fs", round(run.style.font_size * 1.3333)))
@@ -64,13 +68,14 @@ with open("export.bcs","w") as BCScriptFile:
                         tag_buffer.append(Token("\\fs", round(run.style.font_size * 1.3333)))
                         font_size_buff.append(run.style.font_size)
 
+                    # Check fill color to add tag_buffer
                     try:
                         # TODO: Add alpha channel and don't forget to layer opacity
                         if run.style.fill_color != fill_color_buff[-1]:
-                            tag_buffer.append(Token("\\c&H", f"{c8(run.style.fill_color[1])}{c8(run.style.fill_color[2])}{c8(run.style.fill_color[3])}&"))
+                            tag_buffer.append(Token("\\1c&H", f"{c8(run.style.fill_color[1])}{c8(run.style.fill_color[2])}{c8(run.style.fill_color[3])}&"))
                             fill_color_buff.append(run.style.fill_color)
                     except IndexError:
-                        tag_buffer.append(Token("\\c&H", f"{c8(run.style.fill_color[1])}{c8(run.style.fill_color[2])}{c8(run.style.fill_color[3])}&"))
+                        tag_buffer.append(Token("\\1c&H", f"{c8(run.style.fill_color[1])}{c8(run.style.fill_color[2])}{c8(run.style.fill_color[3])}&"))
                         fill_color_buff.append(run.style.fill_color)
 
                     single_tag = ""
