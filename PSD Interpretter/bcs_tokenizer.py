@@ -1,41 +1,63 @@
 from enum import Enum
 from psd_tools import constants
 
-# TODO: Turn this into a extended python C library 
-# [1]: https://docs.python.org/3/extending/extending.html
-
 class TAG(Enum):
     text = "TEXT"
 
     # Text Formatting
     
     ## in runners
-    bold_start = "\\b1"
-    bold_end = "\\b0"
-    italic_start = "\\i1"
-    italic_end = "\\i0"
-    underline_start = "\\u1"
-    underline_end = "\\u0"
-    Strikethrough_start = "\\s1"
-    Strikethrough_end = "\\s0"
+    bold = "\\b"
+    italic = "\\i"
+    underline = "\\u"
+    strikethrough = "\\s"
+
     font_name = "\\fn"
     font_size = "\\fs"
 
-    ## text layer
-
-    # Colors & Effects
-    primary_color = "\\c&H"
+    # Colors & Effects                      https://aegisub.org/docs/latest/ass_tags/#\c
+    primary_color = "\\1c&H"
     outline_color = "\\3c&H"
     shadow_color  = "\\4c&H"
+    primary_alpha = "\\1a&H"
+    outline_alpha = "\\3a&H"
+    shadow_alpha  = "\\4a&H"
     transparency  = "\\alpha&H"
+
+    ## Effects
+    ### Outlines                            https://aegisub.org/docs/latest/ass_tags/#\bord
     outline_width = "\\bord"
+    outline_width_x = "\\xbord"
+    outline_width_y = "\\ybord"
+
+    ### Shadows                             https://aegisub.org/docs/latest/ass_tags/#\shad
     shadow_depth  = "\\shad"
-    blur = "\\blur"
+    shadow_depth_x  = "\\xshad"
+    shadow_depth_y  = "\\yshad"
+
+    ### Blur                                https://aegisub.org/docs/latest/ass_tags/#\blur
+    blur_edges = "\\be"
+    blur = "\\blur"                         # This tag uses gaussian in normal but it's meaningless for my situation
 
     # Positioning
     pos = "\\pos"
-    ### Bounding box
     bbox = "\\bbox"
+
+    ## Rotations                             https://aegisub.org/docs/latest/ass_tags/#\frx
+    rotation_x = "\\frx"
+    rotation_y = "\\fry"
+    rotation_z = "\\frz"
+
+    ## Font scale                            https://aegisub.org/docs/latest/ass_tags/#\fscx
+    font_scale_x = "\\fscx"
+    font_scale_y = "\\fscy"
+
+    ## Text shearing                         https://aegisub.org/docs/latest/ass_tags/#\fax
+    shear_x = "\\fax"
+    shear_y = "\\fay"
+
+    ## ALignment                             https://aegisub.org/docs/latest/ass_tags/#\an
+    alignment = "\\an"
 
 class Token:
     tag: TAG
@@ -57,33 +79,54 @@ class Alignment(Enum):
     CENTER = 1
     RIGHT = 2
 
-    def __init__(self, justin: constants.Justification):
+    @classmethod
+    def from_just(self, justin: constants.Justification):
         match justin:
             case 0:
-                return 0
+                return self(0)
             case 1:
-                return 2
+                return self(2)
             case 2:
-                return 1
+                return self(1)
             case 3:
-                return 0
+                return self(0)
             case 4:
-                return 2
+                return self(2)
             case 5:
-                return 1
+                return self(1)
             case 6:
-                return 1
+                return self(1)
             
 class Line:
     Position: Token
     BoundingBox: Token
+    Opacity: Token
+    Rotation: Token
+    Shear: Token
+    FontScaleX: Token
+    FontScaleY: Token
     text: str
 
     justification: Alignment
     effects: list[dict]
 
     def __str__(self):
-        return f"{{{self.Position}{self.BoundingBox}}}{self.text}"
+        return f"{{\
+            {self.Position}\
+            {self.BoundingBox}\
+            {self.Opacity}\
+            {self.Rotation}\
+            {self.Shear}\
+            {self.FontScaleX}{self.FontScaleY}\
+            {self.tag_justification()}\
+            }}\
+            {self.text}"
+
+    def tag_justification(self):
+        if self.justification == Alignment.CENTER:
+            return ""
+        else:
+            return Token("\\an", self.justification.value)
 
 class BCScript:
     styles: dict[dict]
