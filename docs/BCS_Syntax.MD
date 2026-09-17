@@ -39,13 +39,13 @@ Here is a list of supported override tags.
 | \blur`x` Gaussian Blur Edges                     | ⛔        | ⛔          | ⛔          | ⛔              |
 | \fn`x` Font Name                                 | ✅        | ✅          | ⛔          | ⛔              |
 | \fs`x` Font size                                 | ✅        | ✅          | ⛔          | ⛔              |
-| \fscx/y`x` Font Scale                            | ⛔        | ⛔          | ⛔          | ⛔              |
+| \fscx/y`x` Font Scale                            | ✅        | ✅          | ⛔          | ⛔              |
 | \fsp`x` Letter spacing                           | ⛔        | ⛔          | ⛔          | ⛔              |
-| \fr/x/y/z`x` Text rotation                       | ⛔        | ⛔          | ⛔          | ⛔              |
-| \fax/y`x` Text shearing                          | ⛔        | ⛔          | ⛔          | ⛔              |
+| \fr/x/y/z`x` Text rotation                       | ✅        | ✅          | ⛔          | ⛔              |
+| \fax/y`x` Text shearing                          | ✅        | ✅          | ⛔          | ⛔              |
 | \fe`x` Font encoding                             | 🛑        | 🛑          | 🛑          | 🛑              |
 | \1c&H`b``g``r` Primary Color                     | ✅        | ✅          | ⛔          | ⛔              |
-| \1a&H`b``g``r` Primary Alpha                     | ⛔        | ⛔          | ⛔          | ⛔              |
+| \1a&H`b``g``r` Primary Alpha                     | ✅        | ✅          | ⛔          | ⛔              |
 | \3c&H`b``g``r` Border Color                      | ⛔        | ⛔          | ⛔          | ⛔              |
 | \3a&H`b``g``r` Border Alpha                      | ⛔        | ⛔          | ⛔          | ⛔              |
 | \4c&H`b``g``r` Shadow Color                      | ⛔        | ⛔          | ⛔          | ⛔              |
