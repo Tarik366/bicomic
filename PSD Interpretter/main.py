@@ -23,16 +23,16 @@ with open("export.bcs","w") as BCScriptFile:
             line.Position = Token("\\pos", f"{layer.offset}")
             line.BoundingBox = Token("\\bbox", layer.size)
 
-            line.Opacity = Token("\\1a&H", layer.fill_opacity)
+            if layer.fill_opacity != 255:
+                line.Opacity = Token("\\1a&H", layer.fill_opacity)
+            else:
+                line.Opacity = None
 
+            # Get layer's affine transformation and assign for .ass transformations
             tm = decompose_transform_matrix_for_ass_format(layer.transform)
+            line.assign_transformations(tm)
 
-            line.Rotation = Token("\\frz", tm["rotation_deg"])
-            line.Shear = Token("\\fax", tm["shear_factor"])
-            line.FontScaleX = Token("\\fscx", tm["scale_x"])
-            line.FontScaleY = Token("\\fscy", tm["scale_y"])
-
-            effect_list = effect_handler(layer.effects.items)
+            line.effects = effect_handler(layer.effects.items)
 
             text = layer.engine_dict['Editor']['Text'].value
 

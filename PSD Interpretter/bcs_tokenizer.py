@@ -112,21 +112,27 @@ class Line:
 
     def __str__(self):
         return f"{{\
-            {self.Position}\
-            {self.BoundingBox}\
-            {self.Opacity}\
-            {self.Rotation}\
-            {self.Shear}\
-            {self.FontScaleX}{self.FontScaleY}\
-            {self.tag_justification()}\
-            }}\
-            {self.text}"
+{self.Position or ''}\
+{self.BoundingBox or ''}\
+{self.Opacity or ''}\
+{self.Rotation or ''}\
+{self.Shear or ''}\
+{self.FontScaleX or ''}{self.FontScaleY or ''}\
+{self.tag_justification() or ''}\
+}}\
+{self.text}"
 
     def tag_justification(self):
         if self.justification == Alignment.CENTER:
             return ""
         else:
             return Token("\\an", self.justification.value)
+
+    def assign_transformations(self, tm):
+        self.Rotation = Token("\\frz", tm["rotation_deg"])
+        self.Shear = Token("\\fax", tm["shear_factor"])
+        self.FontScaleX = Token("\\fscx", tm["scale_x"])
+        self.FontScaleY = Token("\\fscy", tm["scale_y"])
 
 class BCScript:
     styles: dict[dict]

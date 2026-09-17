@@ -46,10 +46,10 @@ Here is a list of supported override tags.
 | \fe`x` Font encoding                             | 🛑        | 🛑          | 🛑          | 🛑              |
 | \1c&H`b``g``r` Primary Color                     | ✅        | ✅          | ⛔          | ⛔              |
 | \1a&H`b``g``r` Primary Alpha                     | ✅        | ✅          | ⛔          | ⛔              |
-| \3c&H`b``g``r` Border Color                      | ⛔        | ⛔          | ⛔          | ⛔              |
-| \3a&H`b``g``r` Border Alpha                      | ⛔        | ⛔          | ⛔          | ⛔              |
-| \4c&H`b``g``r` Shadow Color                      | ⛔        | ⛔          | ⛔          | ⛔              |
-| \4a&H`b``g``r` Shadow Alpha                      | ⛔        | ⛔          | ⛔          | ⛔              |
+| \3c&H`b``g``r` Border Color                      | 🛑        | ⛔          | ⛔          | ⛔              |
+| \3a&H`b``g``r` Border Alpha                      | 🛑        | ⛔          | ⛔          | ⛔              |
+| \4c&H`b``g``r` Shadow Color                      | 🛑        | ⛔          | ⛔          | ⛔              |
+| \4a&H`b``g``r` Shadow Alpha                      | 🛑        | ⛔          | ⛔          | ⛔              |
 | \an`x` Alignment                                 | ✅        | ✅          | ⛔          | ⛔              |
 | \k \K \kf \ko \kt Karaoke tags                   | 🛑        | 🛑          | 🛑          | 🛑              |
 | \q`x` Wrap Style                                 | ⛔        | ⛔          | ⛔          | ⛔              |
