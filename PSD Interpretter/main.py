@@ -44,6 +44,10 @@ with open("export.bcs","w") as BCScriptFile:
 
             ts = layer.typesetting
             for paragraph in ts:
+                last_bold = False
+                last_italics = False
+                last_underline = False
+                last_striketrough = False
 
                 line.justification = Alignment.from_just(paragraph.style.justification)
                 for run in paragraph.runs:
@@ -77,6 +81,29 @@ with open("export.bcs","w") as BCScriptFile:
                     except IndexError:
                         tag_buffer.append(Token("\\1c&H", f"{c8(run.style.fill_color[1])}{c8(run.style.fill_color[2])}{c8(run.style.fill_color[3])}&"))
                         fill_color_buff.append(run.style.fill_color)
+
+                    if run.style.faux_bold and ~last_bold:
+                        tag_buffer.append(Token("\\b", "1"))
+                    if not(run.style.faux_bold) and last_bold:
+                        tag_buffer.append(Token("\\b", "0"))
+
+                    if run.style.faux_italic and ~last_italics:
+                        tag_buffer.append(Token("\\i", "1"))
+                    if not(run.style.faux_italic) and last_italics:
+                        tag_buffer.append(Token("\\i", "0"))
+
+                    if run.style.underline and ~last_underline:
+                        tag_buffer.append(Token("\\u", "1"))
+                    if not(run.style.underline) and last_underline:
+                        tag_buffer.append(Token("\\u", "0"))
+
+                    if run.style.strikethrough and ~last_striketrough:
+                        tag_buffer.append(Token("\\s", "1"))
+                    if not(run.style.strikethrough) and last_striketrough:
+                        tag_buffer.append(Token("\\s", "0"))
+
+                    print(run.style.tracking)
+                    print(run.style.leading)
 
                     single_tag = ""
 

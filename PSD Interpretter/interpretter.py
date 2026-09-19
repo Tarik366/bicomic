@@ -32,7 +32,6 @@ def Descriptor_to_dickt(val):
 
 def effect_handler(effects_items):
     effect_list = []
-    print(effects_items)
     for effect in effects_items:
         copy_of_descriptor = {}
         copy_of_descriptor["name"] = effect.name

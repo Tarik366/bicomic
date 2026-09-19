@@ -14,9 +14,10 @@ Here is a list of supported override tags.
 > ✅ - Implemented
 > 🈸 - Actively implementing
 > ⛔ - Not implemented yet
-> 🛑 - Will not be implemented in near-future
+> 🛑 - Will not be implemented in near-future  
+> 🈴 - Implemented as stub, need testing
 
-> [!NOTE]
+> > [!NOTE]
 > Tokenizer - rn it's a python enum class but in near future it must be rewritten in C/C++
 > PSD Interpreter - It turns psd files to a bicomic archive
 > Interpreter - C++ code that read the archive
@@ -27,10 +28,10 @@ Here is a list of supported override tags.
 | \n Soft line break                               | ✅        | ✅          | ⛔          | ⛔              |
 | \N Hard line break                               | ⛔        | ⛔          | ⛔          | ⛔              |
 | \h Hard space                                    | ⛔        | ⛔          | ⛔          | ⛔              |
-| \i`x` Italics                                    | ✅        | ⛔          | ⛔          | ⛔              |
-| \b`x` Bold                                       | ✅        | ⛔          | ⛔          | ⛔              |
-| \u`x` Underline                                  | ✅        | ⛔          | ⛔          | ⛔              |
-| \s`x` Strikeout                                  | ✅        | ⛔          | ⛔          | ⛔              |
+| \i`x` Italics                                    | ✅        | 🈴          | ⛔          | ⛔              |
+| \b`x` Bold                                       | ✅        | 🈴          | ⛔          | ⛔              |
+| \u`x` Underline                                  | ✅        | ✅          | ⛔          | ⛔              |
+| \s`x` Strikeout                                  | ✅        | ✅          | ⛔          | ⛔              |
 | \bord`x` Border                                  | ⛔        | ⛔          | ⛔          | ⛔              |
 | \x/ybord`x` Extended Border Size                 | ⛔        | ⛔          | ⛔          | ⛔              |
 | \shad`x` Shadow distance                         | ⛔        | ⛔          | ⛔          | ⛔              |
