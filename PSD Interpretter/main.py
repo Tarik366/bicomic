@@ -1,129 +1,18 @@
-from psd_tools import PSDImage, constants, color_convert, api
-from psd_tools.api.effects import _Effect
-import psd_tools.psd.descriptor
+import Page.PSDManager as PSDManager
+import filesystem as fs
 
-from bcs_tokenizer import *
-from interpretter import *
-from meth import *
+fafa = PSDManager.read_psd_and_tokenize("unicorn-controller.psd")
 
-psd = PSDImage.open('unicorn-controller.psd')
-psd.composite().save('example.png')
+print(fafa)
 
-with open("export.bcs","w") as BCScriptFile:
+fafa.export("fal.zip")
 
-    bscript = BCScript()
-    # list of fonts in the psd file for font gathering process
-    fontset = []
+print(fs.folder_list("sample"))
 
-    for layer in psd:
+bs = fs.bes()
 
-        if layer.kind == "type":
-            line = Line()
+bs.metadata = fs.Episode_Metadata("tur", 24, "Bir dakikanı rica edebilir miyim?", 3, 36)
 
-            line.Position = Token("\\pos", f"{layer.offset}")
-            line.BoundingBox = Token("\\bbox", layer.size)
+bs.export()
 
-            if layer.fill_opacity != 255:
-                line.Opacity = Token("\\1a&H", layer.fill_opacity)
-            else:
-                line.Opacity = None
-
-            # Get layer's affine transformation and assign for .ass transformations
-            tm = decompose_transform_matrix_for_ass_format(layer.transform)
-            line.assign_transformations(tm)
-
-            line.effects = effect_handler(layer.effects.items)
-
-            text = layer.engine_dict['Editor']['Text'].value
-
-            font_name_buff = []
-            font_size_buff = []
-            fill_color_buff = []
-
-            text_buff = []
-
-            ts = layer.typesetting
-            for paragraph in ts:
-                last_bold = False
-                last_italics = False
-                last_underline = False
-                last_striketrough = False
-
-                line.justification = Alignment.from_just(paragraph.style.justification)
-                for run in paragraph.runs:
-
-                    tag_buffer: list[Token] = []
-
-                    # Check font name to add tag_buffer
-                    try:
-                        if run.style.font_name != font_name_buff[-1]:
-                            tag_buffer.append(Token("\\fn", run.style.font_name))
-                            font_name_buff.append(run.style.font_name)
-                    except IndexError:
-                        tag_buffer.append(Token("\\fn", run.style.font_name))
-                        font_name_buff.append(run.style.font_name)
-
-                    # Check font size to add tag_buffer
-                    try:
-                        if run.style.font_size != font_size_buff[-1]:
-                            tag_buffer.append(Token("\\fs", round(run.style.font_size * 1.3333)))
-                            font_size_buff.append(run.style.font_size)
-                    except IndexError:
-                        tag_buffer.append(Token("\\fs", round(run.style.font_size * 1.3333)))
-                        font_size_buff.append(run.style.font_size)
-
-                    # Check fill color to add tag_buffer
-                    try:
-                        # TODO: Add alpha channel and don't forget to layer opacity
-                        if run.style.fill_color != fill_color_buff[-1]:
-                            tag_buffer.append(Token("\\1c&H", f"{c8(run.style.fill_color[1])}{c8(run.style.fill_color[2])}{c8(run.style.fill_color[3])}&"))
-                            fill_color_buff.append(run.style.fill_color)
-                    except IndexError:
-                        tag_buffer.append(Token("\\1c&H", f"{c8(run.style.fill_color[1])}{c8(run.style.fill_color[2])}{c8(run.style.fill_color[3])}&"))
-                        fill_color_buff.append(run.style.fill_color)
-
-                    if run.style.faux_bold and ~last_bold:
-                        tag_buffer.append(Token("\\b", "1"))
-                    if not(run.style.faux_bold) and last_bold:
-                        tag_buffer.append(Token("\\b", "0"))
-
-                    if run.style.faux_italic and ~last_italics:
-                        tag_buffer.append(Token("\\i", "1"))
-                    if not(run.style.faux_italic) and last_italics:
-                        tag_buffer.append(Token("\\i", "0"))
-
-                    if run.style.underline and ~last_underline:
-                        tag_buffer.append(Token("\\u", "1"))
-                    if not(run.style.underline) and last_underline:
-                        tag_buffer.append(Token("\\u", "0"))
-
-                    if run.style.strikethrough and ~last_striketrough:
-                        tag_buffer.append(Token("\\s", "1"))
-                    if not(run.style.strikethrough) and last_striketrough:
-                        tag_buffer.append(Token("\\s", "0"))
-
-                    print(run.style.tracking)
-                    print(run.style.leading)
-
-                    single_tag = ""
-
-                    if tag_buffer:
-                        single_tag += "{"
-                        for tag in tag_buffer:
-                            single_tag += f"{tag.tag}:{tag.value}"
-                        single_tag += "}"
-
-                    single_tag += run.text
-
-                    if tag_buffer:
-                        single_tag += "{"
-                        for tag in tag_buffer:
-
-                            single_tag += f"{tag.tag}"
-                        single_tag += "}"
-
-                    line.text = single_tag
-                    print("result:", line)
-                    # TODO: Convert text layers into bcscript file
-
-            BCScriptFile.write("\n")
+# TODO: Make a Command Line Interface
