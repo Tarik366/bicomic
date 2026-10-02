@@ -22,8 +22,8 @@ def text_layer(layer, Color_mode):
 
             line.effects = effect_handler(layer.effects.items)
 
-            font_name_buff = []
-            font_size_buff = []
+            font_name_buff = ""
+            font_size_buff = 0
             fill_color_buff = ()
 
             ts = layer.typesetting
@@ -42,22 +42,14 @@ def text_layer(layer, Color_mode):
                     tag_buffer: list[Token] = []
 
                     # Check font name to add tag_buffer
-                    try:
-                        if run.style.font_name != font_name_buff[-1]:
-                            tag_buffer.append(Token("\\fn", run.style.font_name))
-                            font_name_buff.append(run.style.font_name)
-                    except IndexError:
+                    if run.style.font_name != font_name_buff:
                         tag_buffer.append(Token("\\fn", run.style.font_name))
-                        font_name_buff.append(run.style.font_name)
+                        font_name_buff = run.style.font_name
 
                     # Check font size to add tag_buffer
-                    try:
-                        if run.style.font_size != font_size_buff[-1]:
-                            tag_buffer.append(Token("\\fs", round(run.style.font_size * 1.3333)))
-                            font_size_buff.append(run.style.font_size)
-                    except IndexError:
+                    if run.style.font_size != font_size_buff:
                         tag_buffer.append(Token("\\fs", round(run.style.font_size * 1.3333)))
-                        font_size_buff.append(run.style.font_size)
+                        font_size_buff = run.style.font_size
 
                     # Check fill color to add tag_buffer
                     

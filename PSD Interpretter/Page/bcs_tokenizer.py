@@ -185,7 +185,7 @@ class Page:
 
     # TODO: Make this thing to be in the recursive matroska loop
     def export(self, filename):
-        with zipfile.ZipFile(filename, "w") as zf:
+        with zipfile.ZipFile(filename, "w", 14) as zf:
             zf.writestr("typeset.bcs", self.__str__())
             print(f"İşlenecek katmanlar: {self.lines.__len__()}")
             for lay in self.lines:
