@@ -169,7 +169,13 @@ class PixelLayer(Line):
 {self.name}.avif\n"
 
 class Page:
-    lines: list[Line] = []
+    lines: list[Line]
+    number = 0
+    language: str
+
+    def __init__(self, lang = "eng"):
+        self.lines = []
+        self.language = lang
 
     def __str__(self):
         bufger = ""
@@ -180,7 +186,9 @@ class Page:
     # TODO: Make this thing to be in the recursive matroska loop
     def export(self, filename):
         with zipfile.ZipFile(filename, "w") as zf:
-            zf.writestr("typeset.bcs", self.__str__()) 
+            zf.writestr("typeset.bcs", self.__str__())
+            print(f"İşlenecek katmanlar: {self.lines.__len__()}")
             for lay in self.lines:
                 if isinstance(lay, PixelLayer):
-                    zf.writestr(f"{lay.name}.avif", lay.data._repr_image("avif", alpha_premultiplied=True))
+                    print(lay.name)
+                    zf.writestr(f"{self.number}/{lay.name}.avif", lay.data._repr_image("avif", alpha_premultiplied=True))

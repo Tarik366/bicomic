@@ -4,9 +4,18 @@ from Page.bcs_tokenizer import Page
 
 def folder_list(path):
     f = []
+    # TODO: Sort numbers correctly
     for (dirpath, dirnames, filenames) in os.walk(path):
-        f.extend(filenames)
+        for files in (filenames):
+            f.append(f"{dirpath}/{files}")
         break
+    return f
+
+def folder_list_ext_spec(path, ext = ".bcs"):
+    f = []
+    for file in folder_list(path):
+        if file.endswith(ext):
+            f.append(file)
     return f
 
 class bcz:
@@ -18,26 +27,33 @@ class bcz:
 
 class Episode_Metadata:
 
-    language = ""
-    page_count = 0
-
     # Episode details
     name = ""     # Episode name
     volume = 0    # Volume that contain this episode
     episode = 0   # Episode number
 
-    def __init__(self, language, pages, name, volume, episode):
-        self.language, self.page_count, self.name, self.volume, self.episode = language, pages, name, volume, episode
+    def __init__(self, name, volume, episode):
+        self.name, self.volume, self.episode = name, volume, episode
+
+import shutil
 
 class bes:
     metadata: Episode_Metadata
     pages: list[Page]
 
+    def __init__(self):
+        self.pages = []
+
     # TODO: Make the `.bes` file export
-    def export(self):
+    def export(self, out):
+        shutil.rmtree("temp_bps")
+        print(self.pages)
+        print(self.pages[0].lines.__len__())
+        os.makedirs("temp_bps")
         for idx, pag in enumerate(self.pages):
             pag.export(f"temp_bps/{idx:02d}.bps")
-        with zipfile.ZipFile(f"{self.metadata.episode:03d}.bes", 'w') as beszip:
+        os.makedirs(out, exist_ok=True)
+        with zipfile.ZipFile(f"{out}/{self.metadata.episode:03d}.bes", 'w') as beszip:
             beszip.comment = self.metadata.__dict__.__str__().encode()
             for idx, pag in enumerate(self.pages):
-                beszip.write(f"temp_bps/{idx:02d}.bps", )
+                beszip.write(f"temp_bps/{idx:02d}.bps", f"{pag.language}/{idx:02d}.bps")
