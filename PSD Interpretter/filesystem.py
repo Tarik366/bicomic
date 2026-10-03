@@ -1,4 +1,5 @@
 import os, zipfile, shutil, json
+import PIL.Image
 
 from Page.bcs_tokenizer import Page
 
@@ -49,6 +50,8 @@ class Episode_Metadata:
     def __init__(self, name, volume, episode):
         self.name, self.volume, self.episode = name, volume, episode
 
+class Serie_Metadata:
+    title: dict 
 
 class bes:
     metadata: Episode_Metadata
@@ -68,3 +71,14 @@ class bes:
             beszip.writestr("metadata.json", json.dumps(self.metadata.__dict__, ensure_ascii=False))
             for idx, pag in enumerate(self.pages):
                 beszip.write(f"temp_bps/{idx:02d}.bps", f"{pag.language}/{idx:02d}.bps")
+
+class bcz:
+    metadata: Serie_Metadata
+    # TODO: Make some way to add multi-lingual covers. 
+    cover: PIL.Image.Image
+    episodes: list[bes]
+    
+    def __init__(self):
+        self.metadata = Serie_Metadata()
+        self.cover = None
+        self.episodes = []
