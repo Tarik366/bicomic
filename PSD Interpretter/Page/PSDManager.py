@@ -142,12 +142,13 @@ class PSD_Page:
     psd: PSDImage
     bscript: Page
     # list of fonts in the psd file for font gathering process
-    fontset = []
+    fontset: list
     Color_mode: constants.ColorMode
 
     def __init__(self, psd_file, ind):
         self.psd = PSDImage.open(psd_file)
         self.bscript = Page()
+        self.fontset = []
         print(f"psd içindeki katmanlar: {self.psd.__len__()}")
         self.Color_mode = self.psd.color_mode
         self.bscript.number = ind

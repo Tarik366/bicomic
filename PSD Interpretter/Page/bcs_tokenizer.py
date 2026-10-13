@@ -178,12 +178,8 @@ class Page:
         self.language = lang
 
     def __str__(self):
-        bufger = ""
-        for li in self.lines:
-            bufger += li.__repr__()
-        return bufger
+        return "".join(li.__repr__() for li in self.lines)
 
-    # TODO: Make this thing to be in the recursive matroska loop
     def export(self, filename):
         with zipfile.ZipFile(filename, "w", 14) as zf:
             zf.writestr("typeset.bcs", self.__str__())
