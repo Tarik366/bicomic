@@ -1,8 +1,7 @@
 import os, zipfile, json, tempfile, re, datetime
 from collections.abc import Iterable
 import PIL.Image
-from manga_updates_api_client import Client
-from manga_updates_api_client.api.series import retrieve_series
+from functools import singledispatch
 
 from Page.bcs_tokenizer import Page
 from languages import Text, Age_Rating, Demographic, Publication
@@ -35,13 +34,6 @@ def folder_list_ext_spec(path, ext = ".bcs"):
     print(f)
     return f
 
-class bcz:
-    def __init__(self):
-        with zipfile.ZipFile('spam.zip', 'w') as myzip:
-            myzip.comment = "bu bir test dosyasıdır ve çıkışa yakın düzeltilmelidir".encode()
-            myzip.write('export.bcs')
-            myzip.close()
-
 class Episode_Metadata:
 
     # Episode details
@@ -58,9 +50,7 @@ class Serie_Metadata:
     author: str
     artist: str
 
-    isbn: int # 13-digit number that identify the book
-
-    demographic: Demographic
+    demographic: Demographic | None # Target demographic
     genres: list
     format: str
     content_rating: Age_Rating # Minimum allowed age
@@ -68,15 +58,23 @@ class Serie_Metadata:
     release_date: datetime.date
     publication_status: Publication
 
-    def __init__(self, title: Text, description: Text, author, artist):
-        pass
+    def __init__(self, dict, /, **kwds):
+        for key in dict:
+            setattr(self, key, dict[key])
+        for key in kwds:
+            setattr(self, key, kwds[key])
 
 class bes:
-    metadata: Episode_Metadata
+    metadata: Episode_Metadata | None
+    serie_metadata: Serie_Metadata | None
     pages: list[Page]
 
-    def __init__(self):
+    def __init__(self, dict, /, **kwds):
         self.pages = []
+        for key in dict:
+            setattr(self, key, dict[key])
+        for key in kwds:
+            setattr(self, key, kwds[key])
 
     def export(self, out, pages: Iterable[Page] | None = None):
         os.makedirs(out, exist_ok=True)
@@ -105,11 +103,19 @@ class bes:
 
 class bcz:
     metadata: Serie_Metadata
-    # TODO: Make some way to add multi-lingual covers. 
-    cover: PIL.Image.Image
+    covers: list[PIL.Image.Image]
     episodes: list[bes]
+
+    volume: int
     
-    def __init__(self):
+    def __init__(self, volume = 1):
         self.metadata = Serie_Metadata()
         self.cover = None
         self.episodes = []
+        self.volume = volume
+
+    def export(self, out):
+        os.makedirs(out, exist_ok=True)
+        output_path = os.path.join(out, f"{self.metadata.episode:003.0f}.bes")
+
+Serie_Metadata()
