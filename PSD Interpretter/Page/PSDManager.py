@@ -159,7 +159,7 @@ class PSD_Page:
                 for lay in layer:
                     self.loopy_loopy(lay)
             case "pixel":
-                # TODO: Add rasterizing of neighbor pixel layers
+                # TODO: Add rasterizing of neighbor pixel layers for storage optimization
                 # TODO: UI: Add setting some layers to be in the base folder
                 self.bscript.lines.append(PixelLayer(layer.composite(), Token("\\pos", layer.offset), Token("\\bbox", layer.bbox), Token("\\1a&H", layer.fill_opacity), layer.name))
             case "type":
