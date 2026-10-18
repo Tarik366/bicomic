@@ -1,12 +1,14 @@
 from psd_tools import PSDImage, constants, color_convert, api
 from psd_tools.api import layers
-import psd_tools.psd.descriptor
 
-from Page.bcs_tokenizer import *
+from bcs_tokenizer import *
 from Page.interpretter import *
 from meth import *
 
 from warnings import warn
+
+# NOTE: For type-checking convenience
+import psd_tools.psd.descriptor
 
 def text_layer(layer, Color_mode):
             line = Line(Token("\\pos", f"{layer.offset}"), Token("\\bbox", layer.size))

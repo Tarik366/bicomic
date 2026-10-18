@@ -1,10 +1,9 @@
 import os, zipfile, json, tempfile, re, datetime
 from collections.abc import Iterable
 import PIL.Image
-from functools import singledispatch
 
-from Page.bcs_tokenizer import Page
-from languages import Text, Age_Rating, Demographic, Publication
+from bcs_tokenizer import Page
+from languages import Text, Age_Rating, Demographic, Publication, Format
 
 def atoi(text):
     return int(text) if text.isdigit() else text
@@ -31,7 +30,6 @@ def folder_list_ext_spec(path, ext = ".bcs"):
     for file in folder_list(path):
         if file.endswith(ext):
             f.append(file)
-    print(f)
     return f
 
 class Episode_Metadata:
@@ -47,12 +45,23 @@ class Episode_Metadata:
 class Serie_Metadata:
     titles: Text
     descriptions: Text
+
+    # credits
     author: str
     artist: str
 
+    publisher: str
+
+    # Translation credits
+    translator: Text # language specific and can be comma seperated
+    cleaners: Text
+    typesetters: Text
+    quality_check: Text
+    proofreaders: Text
+
     demographic: Demographic | None # Target demographic
     genres: list
-    format: str
+    format: list[Format]
     content_rating: Age_Rating # Minimum allowed age
 
     release_date: datetime.date
