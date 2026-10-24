@@ -1,24 +1,26 @@
-import json, enum
-
-langs_object: dict = json.load(open("../languageObject.json", "r", encoding="utf-8"))
-
-lang_keys = langs_object["properties"].keys()
-
-del langs_object
+import enum
+import pycountry
 
 class Text(dict):
-    _keys = lang_keys
     
     def __init__(self, dict = {}, /, **kwds):
+        if pycountry.languages.get(alpha_3=key) is None:
+            raise KeyError("Invalid Language code")
         for key, word in dict.items():
             self[key.lower()] = word
         for key, word in kwds.items():
             self[key.lower()] = word
 
     def __setitem__(self, key, val):
-        if key not in Text._keys:
-            raise KeyError
+        if pycountry.languages.get(alpha_3=key) is None:
+            raise KeyError("Invalid Language code")
         dict.__setitem__(self, key, val)
+
+tes = Text(zum="fafa")
+
+tes['zzz']="dfafa"
+
+print(tes)
 
 class Demographic(enum.Enum):
     SHOUNEN = 1 # 13-18 Male
@@ -51,4 +53,4 @@ class Publication(enum.Enum):
     ONGOING = 0
     COMPLETED = 1
     HIATUS = 2
-    CANCELLED = 
+    CANCELLED = 3
