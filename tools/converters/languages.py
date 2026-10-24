@@ -4,11 +4,13 @@ import pycountry
 class Text(dict):
     
     def __init__(self, dict = {}, /, **kwds):
-        if pycountry.languages.get(alpha_3=key) is None:
-            raise KeyError("Invalid Language code")
         for key, word in dict.items():
+            if pycountry.languages.get(alpha_3=key) is None:
+                raise KeyError("Invalid Language code")
             self[key.lower()] = word
         for key, word in kwds.items():
+            if pycountry.languages.get(alpha_3=key) is None:
+                raise KeyError("Invalid Language code")
             self[key.lower()] = word
 
     def __setitem__(self, key, val):
