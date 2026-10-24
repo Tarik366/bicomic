@@ -16,12 +16,6 @@ class Text(dict):
             raise KeyError("Invalid Language code")
         dict.__setitem__(self, key, val)
 
-tes = Text(zum="fafa")
-
-tes['zzz']="dfafa"
-
-print(tes)
-
 class Demographic(enum.Enum):
     SHOUNEN = 1 # 13-18 Male
     SEINEN = 2 # +18 Male

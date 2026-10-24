@@ -110,7 +110,7 @@ class bes:
 
             os.replace(archive_path, output_path)
 
-class bcz:
+class bicomic:
     metadata: Serie_Metadata
     covers: list[PIL.Image.Image]
     episodes: list[bes]
@@ -123,6 +123,7 @@ class bcz:
         self.episodes = []
         self.volume = volume
 
+    # TODO: You forget here
     def export(self, out):
         os.makedirs(out, exist_ok=True)
         output_path = os.path.join(out, f"{self.metadata.episode:003.0f}.bes")
