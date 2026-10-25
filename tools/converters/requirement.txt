@@ -1,0 +1,4 @@
+psd_tools
+click
+pycountry
+ebooklib

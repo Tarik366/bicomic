@@ -78,12 +78,13 @@ class bes:
     serie_metadata: Serie_Metadata | None
     pages: list[Page]
 
-    def __init__(self, dict, /, **kwds):
+    def __init__(self, dict = {}, /, **kwds):
         self.pages = []
+        # Make someway to share metadatas between episode and serie or create a combined class of two 
         for key in dict:
-            setattr(self, key, dict[key])
+            setattr(self.metadata, key, dict[key])
         for key in kwds:
-            setattr(self, key, kwds[key])
+            setattr(self.metadata, key, kwds[key])
 
     def export(self, out, pages: Iterable[Page] | None = None):
         os.makedirs(out, exist_ok=True)
@@ -128,4 +129,3 @@ class bicomic:
         os.makedirs(out, exist_ok=True)
         output_path = os.path.join(out, f"{self.metadata.episode:003.0f}.bes")
 
-Serie_Metadata()

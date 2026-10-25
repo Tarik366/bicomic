@@ -2,7 +2,7 @@ from psd_tools import PSDImage, constants, color_convert, api
 from psd_tools.api import layers
 
 from bcs_tokenizer import *
-from Page.interpretter import *
+from interpretter import *
 from meth import *
 
 from warnings import warn
@@ -173,6 +173,7 @@ class PSD_Page:
 
 def read_psd_and_tokenize(psd_file, index):
     psd_c = PSD_Page(psd_file, index)
+            # TODO: make logging more understandable
     print(f"reading {index} psd:")
 
     for layer in psd_c.psd:

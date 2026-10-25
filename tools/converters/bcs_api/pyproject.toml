@@ -1,0 +1,16 @@
+[project]
+name = "bcs_api"
+version = "0.1.0"
+description = "Converters that facilitate the progress of transforming to bicomic"
+dependencies = ["psd_tools", "pycountry"]
+authors = [
+  {name = "Tarik366", email = "tariky113@gmail.com"},
+]
+
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = ["flit_core >=3.2,<4"]
+
+[tool.setuptools]
+package-dir = {"bcs_api" = "."}
+packages = ["bcs_api"]
