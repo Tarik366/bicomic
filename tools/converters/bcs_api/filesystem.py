@@ -1,12 +1,10 @@
 import os, zipfile, json, tempfile, re, datetime
 from collections.abc import Iterable
 import PIL.Image
+from meth import lazy_atoi as atoi
 
 from bcs_tokenizer import Page
 from languages import Text, Age_Rating, Demographic, Publication, Format
-
-def atoi(text):
-    return int(text) if text.isdigit() else text
 
 def natural_keys(text):
     '''
@@ -128,4 +126,3 @@ class bicomic:
     def export(self, out):
         os.makedirs(out, exist_ok=True)
         output_path = os.path.join(out, f"{self.metadata.episode:003.0f}.bes")
-

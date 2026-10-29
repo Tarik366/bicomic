@@ -24,3 +24,15 @@ def decompose_transform_matrix_for_ass_format(transform):
         "scale_x": round(scale_x * 100, 2),
         "scale_y": round(scale_y * 100, 2),
     }
+
+def lazy_atoi(text) -> int:
+    """atoi for poor people
+    Only works for all-number strings, no negatives and no float
+    """
+    return int(text) if text.isdigit() else text
+
+def atoi(text) -> int:
+    """atoi but with steroids
+    Only works for all-number strings, no negatives and no float
+    """
+    return int("".join(letter if letter.isdigit() else "" for letter in text))
