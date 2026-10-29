@@ -1,8 +1,8 @@
-import click
-import ebooklib
+import click, ebooklib, pycountry
 import ebooklib.epub as pub
 from languages import Text
-import pycountry
+
+from commands.epub_commands import epub_table_to_bicomic
 
 """ Main CLI Endpoint, can be fragmented like epub tools and cbz files and moved to the parent"""
 
@@ -36,15 +36,24 @@ def to_bicomic(epub, dest, rasterize, manual):
         book = pub.read_epub(epub_path)
 
         # check the language and compare to previous ones and allocate to lang_allocation variable
-        # NOTE: This line might cause some issues with other epub files, must be tested
+        # FIXME: This line might cause some issues with other epub files, must be tested
         book_lang = pycountry.languages.get(alpha_2=book.get_metadata("DC", "language")[0][0]).alpha_3
-        print(book_lang)
         if book_lang in lang_allocation.keys():
-            # TODO: Move conflicting file to new assigned language and start processing new file to assigned language
 
             old_conclusion = click.prompt(f"\033[33m Warning: Collusion!\n occured in \"{epub_path}\" and \"{lang_allocation[book_lang]}\". \nWhich language would you like to be assigned to \"{lang_allocation[book_lang]}\"? \033[00m", type=str, default=book_lang)
             new_conclusion = click.prompt(f"\033[33m Warning: Collusion!\nWhich language would you like to be assigned to \"{epub_path}\"? \033[00m", type=str, default=book_lang)
-        lang_allocation[book_lang] = epub_path
+
+            # Todo: Check for conflicts in new_conclusion 
+
+            lang_allocation[old_conclusion] = lang_allocation.pop(book_lang)
+            lang_allocation[new_conclusion] = epub_path
+        else:
+            lang_allocation[book_lang] = epub_path
+
+    # Add a progress bar that showcase which page or episode in it or smth like that
+    bicomic_file = epub_table_to_bicomic(lang_allocation)
+
+    # TODO: Make export of bicomic
 
 @cli.command("to_epub")
 @click.argument("bicomic", type=click.Path(resolve_path=True))

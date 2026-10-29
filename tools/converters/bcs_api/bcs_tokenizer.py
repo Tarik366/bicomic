@@ -171,11 +171,9 @@ class PixelLayer(Line):
 class Page:
     lines: list[Line]
     number = 0
-    language: str
 
-    def __init__(self, lang = "eng"):
+    def __init__(self):
         self.lines = []
-        self.language = lang
 
     def __str__(self):
         return "".join(li.__repr__() for li in self.lines)
