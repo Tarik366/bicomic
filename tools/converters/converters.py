@@ -2,7 +2,7 @@ import click, ebooklib, pycountry
 import ebooklib.epub as pub
 from languages import Text
 
-from commands.epub_commands import epub_table_to_bicomic
+# from commands.epub_commands import epub_table_to_bicomic
 
 """ Main CLI Endpoint, can be fragmented like epub tools and cbz files and moved to the parent"""
 
@@ -22,13 +22,14 @@ def cli():
         epcomic to_epub -r example.bicomic 
     """
 
-@cli.command("to_bc")
+# Make later or drop it. There's no reason to make an epub converter
+""" @cli.command("to_bc")
 @click.argument("epub", nargs=-1, type=click.Path(resolve_path=True))
 @click.argument("dest", type=click.Path(resolve_path=True))
 @click.option("--rasterize", "-r", is_flag=True, help="Rasterizes all pages to an image. Consumes more storage and complicates translating.")
 @click.option("--manual", "-m", help="Allow to manually selecting the languages of files")
 def to_bicomic(epub, dest, rasterize, manual):
-    """Converts epub files to a bicomic file. Allows multiple files. It looks for language data of epub files. If there's conflicts solved within runtime cli."""
+    # Converts epub files to a bicomic file. Allows multiple files. It looks for language data of epub files. If there's conflicts solved within runtime cli
     lang_allocation = Text()
     bes_langs = Text()
     for ind, epub_path in enumerate(epub):
@@ -53,38 +54,57 @@ def to_bicomic(epub, dest, rasterize, manual):
     # Add a progress bar that showcase which page or episode in it or smth like that
     bicomic_file = epub_table_to_bicomic(lang_allocation)
 
-    # TODO: Make export of bicomic
+    # TODO: Make export of bicomic 
+"""
 
-@cli.command("to_epub")
+""" @cli.command("to_epub")
 @click.argument("bicomic", type=click.Path(resolve_path=True))
 @click.argument("dest", type=click.Path(resolve_path=True))
 @click.option("--rasterize", "-r", is_flag=True, help="Rasterizes all pages to an image. Consumes more storage.")
 @click.option("--lang", "-l", default="all", help="Specify languages that will be extracted, languages can be separated with semi-colons. Defaults to 'all' and use ISO 639-3 codes")
 def to_epub(count, name):
-    """Converts bicomic files to epub files."""
+    # Converts bicomic files to epub files.
     for x in range(count):
-        click.echo(f"Hello {name}!")
+        click.echo(f"Hello {name}!") """
 
-@cli.command("add_ep2bicomic")
+@cli.group("bicomic")
+def bic():
+    """Bicomic-specific commands"""
+
+@bic.command("add_episode")
 def add_ep2bicomic():
     """Add one episode to bicomic file"""
 
-@cli.command("to_cbz")
+@cli.group("cbz")
+def cbz():
+    """CBZ related commands
+    
+    """
+
+@cbz.command("to_cbz")
 def to_cbz():
     """Converts individuals .bes files or .bes files in .bicomic file to a folder of cbz files"""
     pass
 
-@cli.command("to_bes")
-def to_bes():
-    pass
+@cbz.command("to_bes")
+def cbz_to_bicomic():
+    """Convert a cbz file to .bes"""
 
-@cli.command()
-def psd2bicomic():
+@cli.group("psd")
+def psd():
+    """PSD related commands"""
+
+@psd.command()
+def to_bps():
     """TODO: Move PSD_Interpreter/main.py to here"""
 
-@cli.command()
-def bicomic2psd():
-    """TODO: reverse of PSD_Interpreter/main.py """
+@psd.command("to_bes")
+def psd_to_bes():
+    """TODO: Move PSD_Interpreter/main.py to here"""
+
+@psd.command()
+def to_psd():
+    """TODO: reverse of PSD_Interpreter/main.py here"""
 
 if __name__ == '__main__':
     cli()

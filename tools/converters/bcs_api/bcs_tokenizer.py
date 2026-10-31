@@ -2,7 +2,7 @@ from enum import Enum
 from psd_tools import constants
 from PIL import Image
 
-import zipfile
+import zipfile, re
 
 class TAG(Enum):
     text = "TEXT"
@@ -64,19 +64,8 @@ class TAG(Enum):
     ## ALignment                             https://aegisub.org/docs/latest/ass_tags/#\an
     alignment = "\\an"               # V
 
-class Token:
-    tag: TAG
-    value: str
-
-    def __init__(self, tag, value = ""):
-        self.tag = tag
-        self.value = value
-
-    def __str__(self):
-        return f"{self.tag}:{self.value}"
-
-    def __repr__(self):
-        return str(self)
+    ## Styling                               https://aegisub.org/docs/latest/ass_tags/#\r
+    style = "\\r"            
 
 class Alignment(Enum):
 
@@ -101,6 +90,41 @@ class Alignment(Enum):
                 return self(1)
             case 6:
                 return self(1)
+
+class Token:
+    tag: TAG
+    value: str
+
+    def __init__(self, tag, value = ""):
+        self.tag = tag
+        self.value = value
+
+    def __str__(self):
+        return f"{self.tag}:{self.value}"
+
+    def __repr__(self):
+        return str(self)
+
+    """ @classmethod
+    def from_css(self, css_style):
+        pattern = re.compile(r"(?:\s+|)(.*)(?:\s+|):(.*);", flags=re.MULTILINE)
+        matches = pattern.finditer(css_style)
+        for midx, match in enumerate(matches):
+            key, val = match.groups()
+            match key.strip():
+                case "color":
+                    # TODO: Convert to Hex
+                case "text-align":
+
+                case "margin":
+                case "font-size":
+                case "border":
+                case "letter-spacing":
+                case "writing-mode":
+                    yield TAG()
+            yield (midx, key.strip(), val.strip()) """
+
+
             
 class Line:
     Position: Token
